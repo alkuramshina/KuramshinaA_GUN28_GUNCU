@@ -16,7 +16,7 @@ namespace DefaultNamespace
 		{
 			////todo comment: зачем нужны эти проверки?
 			/// проверка, существуют ли записи и есть ли что воспроизводить
-			if (!TryGetComponent(out _save) || _save.Records.Count == 0)
+			if (!TryGetComponent(out _save) || _save.Count() == 0)
 			{
 				Debug.LogError("Records incorrect value", this);
 				//todo comment: Для чего выключается этот компонент?
@@ -28,7 +28,7 @@ namespace DefaultNamespace
 
 		private void Update()
 		{
-			var curr = _save.Records[_index];
+			var curr = _save.GetRecord(_index);
 			//todo comment: Что проверяет это условие (с какой целью)? 
 			// Если наступил конец текущей записи
 			if (Time.time > curr.Time)
@@ -37,7 +37,7 @@ namespace DefaultNamespace
 				_index++;
 				//todo comment: Для чего нужна эта проверка?
 				// Если мы дошли до конца набора записей
-				if (_index >= _save.Records.Count)
+				if (_index >= _save.Count())
 				{
 					enabled = false;
 					Debug.Log($"<b>{name}</b> finished", this);

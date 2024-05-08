@@ -11,15 +11,20 @@ namespace DefaultNamespace
 		
 		//todo comment: Что произойдёт, если _delay > _duration?
 		// enabled станет false раньше, чем произойдет хотя бы одна запись
-		private float _delay = 0.5f;
-		private float _duration = 5f;
+		[SerializeField, Range(0.2f, 1.0f)] private float _delay = 0.5f;
+		[SerializeField, Min(0.2f)] private float _duration = 5f;
 
 		private void Start()
 		{
 			//todo comment: Почему этот поиск производится здесь, а не в начале метода Update?
 			// Здесь он произойдет один раз после загрузки компонента, в Update - будет происходить каждый кадр
 			_save = GetComponent<PositionSaver>();
-			_save.Records.Clear();
+			_save.Clear();
+			
+			if (_duration <= _delay)
+			{
+				_duration = _delay * 5;
+			}
 		}
 
 		private void Update()
@@ -38,7 +43,7 @@ namespace DefaultNamespace
 			if (_currentDelay <= 0f)
 			{
 				_currentDelay = _delay;
-				_save.Records.Add(new PositionSaver.Data
+				_save.AddRecord(new PositionSaver.Data
 				{
 					Position = transform.position,
 					//todo comment: Для чего сохраняется значение игрового времени?

@@ -1,21 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using DefaultNamespace.Utils;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
 	public class PositionSaver : MonoBehaviour
 	{
+		[Serializable]
 		public struct Data
 		{
 			public Vector3 Position;
 			public float Time;
 		}
 
+		[SerializeField, ReadOnly]
+		[Tooltip("Для заполнения этого поля нужно воспользоваться контекстным меню в инспекторе и командой “Create File”")]
 		private TextAsset _json;
 
-		public List<Data> Records { get; private set; }
+		[SerializeField, HideInInspector]
+		private List<Data> Records;
+
+		public void Clear() => Records.Clear();
+		public int Count() => Records.Count;
+
+		public void AddRecord(Data record) => Records.Add(record);
+		public Data GetRecord(int index) => Records[index];
 
 		private void Awake()
 		{
@@ -29,6 +40,7 @@ namespace DefaultNamespace
 			}
 			
 			JsonUtility.FromJsonOverwrite(_json.text, this);
+			
 			//todo comment: Для чего нужна эта проверка (что она позволяет избежать)?
 			// NRE :) Проверка нужна, чтобы не перетирать данные, подтянутые из сохраненных в json, полагаю 
 			if (Records == null)
@@ -56,12 +68,14 @@ namespace DefaultNamespace
 		}
 		
 #if UNITY_EDITOR
+		private readonly string _filePath = Path.Combine(Application.dataPath, "Path.txt");
+		
 		[ContextMenu("Create File")]
 		private void CreateFile()
 		{
 			//todo comment: Что происходит в этой строке?
 			// Создается файл по указанному пути, данные открываются для чтения и записи в потоке stream
-			var stream = File.Create(Path.Combine(Application.dataPath, "Path.txt"));
+			var stream = File.Create(_filePath);
 			//todo comment: Подумайте для чего нужна эта строка? (а потом проверьте догадку, закомментировав) 
 			// освобождение ресурсов (using)
 			stream.Dispose();
@@ -92,7 +106,7 @@ namespace DefaultNamespace
 
 		private void OnDestroy()
 		{
-			//todo logic...
+			File.WriteAllText(_filePath, JsonUtility.ToJson(this));
 		}
 #endif
 	}
