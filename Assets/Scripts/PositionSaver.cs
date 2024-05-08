@@ -20,6 +20,7 @@ namespace DefaultNamespace
 		private void Awake()
 		{
 			//todo comment: Что будет, если в теле этого условия не сделать выход из метода?
+			// NRE
 			if (_json == null)
 			{
 				gameObject.SetActive(false);
@@ -29,6 +30,7 @@ namespace DefaultNamespace
 			
 			JsonUtility.FromJsonOverwrite(_json.text, this);
 			//todo comment: Для чего нужна эта проверка (что она позволяет избежать)?
+			// NRE :) Проверка нужна, чтобы не перетирать данные, подтянутые из сохраненных в json, полагаю 
 			if (Records == null)
 				Records = new List<Data>(10);
 		}
@@ -36,12 +38,14 @@ namespace DefaultNamespace
 		private void OnDrawGizmos()
 		{
 			//todo comment: Зачем нужны эти проверки (что они позволляют избежать)?
+			// Если записей о движении нет, то показывать нечего и обращаться к данным пустого объекта не нужно (NRE :D)
 			if (Records == null || Records.Count == 0) return;
 			var data = Records;
 			var prev = data[0].Position;
 			Gizmos.color = Color.green;
 			Gizmos.DrawWireSphere(prev, 0.3f);
 			//todo comment: Почему итерация начинается не с нулевого элемента?
+			// Первая позиция определена выше, гизмосы будут рисоваться от prev к curr
 			for (int i = 1; i < data.Count; i++)
 			{
 				var curr = data[i].Position;
@@ -56,8 +60,10 @@ namespace DefaultNamespace
 		private void CreateFile()
 		{
 			//todo comment: Что происходит в этой строке?
+			// Создается файл по указанному пути, данные открываются для чтения и записи в потоке stream
 			var stream = File.Create(Path.Combine(Application.dataPath, "Path.txt"));
 			//todo comment: Подумайте для чего нужна эта строка? (а потом проверьте догадку, закомментировав) 
+			// освобождение ресурсов (using)
 			stream.Dispose();
 			UnityEditor.AssetDatabase.Refresh();
 			//В Unity можно искать объекты по их типу, для этого используется префикс "t:"
@@ -70,6 +76,7 @@ namespace DefaultNamespace
 				//Этой командой можно загрузить сам ассет
 				var asset = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(path);
 				//todo comment: Для чего нужны эти проверки?
+				// Проверка, был ли найден нужный ассет и есть ли с чем работать
 				if(asset != null && asset.name == "Path")
 				{
 					_json = asset;
@@ -77,6 +84,7 @@ namespace DefaultNamespace
 					UnityEditor.AssetDatabase.SaveAssets();
 					UnityEditor.AssetDatabase.Refresh();
 					//todo comment: Почему мы здесь выходим, а не продолжаем итерироваться?
+					// потому что нужный ассет был найден и перебирать гуиды дальше не имеет смысла
 					return;
 				}
 			}
