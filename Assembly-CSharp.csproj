@@ -46,6 +46,7 @@
     <Compile Include="Assets\Scripts\CameraRotator.cs" />
     <Compile Include="Assets\Homework\Scripts\Gates.cs" />
     <Compile Include="Assets\Homework\Scripts\Ball.cs" />
+    <Compile Include="Assets\Homework\Scripts\NewMover.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.34f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
