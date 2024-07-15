@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Netologia.Homework
@@ -26,6 +27,7 @@ namespace Netologia.Homework
 				StartCoroutine(Reloader());
 				_ball.isKinematic = false;
 				_ball.transform.parent = null;
+				_ball.transform.localScale = new Vector3(1, 1, 1);
 				_ball.velocity = transform.forward * _startVelocity;
 				Destroy(_ball.gameObject, _lifetime);
 			}

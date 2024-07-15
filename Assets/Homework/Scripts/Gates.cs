@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Netologia.Homework
@@ -13,11 +12,11 @@ namespace Netologia.Homework
                 return;
             
             _score++;
-            DisplayScore();
             
-            Destroy(ball);
+            DisplayScore();
+            Destroy(ball.gameObject);
         }
 
-        private void DisplayScore() => Console.WriteLine($"Счет: {_score}");
+        private void DisplayScore() => Debug.Log($"Счет: {_score}");
     }
 }

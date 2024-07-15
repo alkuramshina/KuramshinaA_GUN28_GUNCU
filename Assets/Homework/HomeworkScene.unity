@@ -744,9 +744,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ballPrefab: {fileID: 9069669873682580422, guid: 2d4b8583777b4dc49bc5bc57934ee6b7, type: 3}
-  _startVelocity: 0
-  _lifetime: 0
-  _respawnDelay: 0
+  _startVelocity: 15
+  _lifetime: 10
+  _respawnDelay: 1
 --- !u!54 &1729871100
 Rigidbody:
   m_ObjectHideFlags: 0
