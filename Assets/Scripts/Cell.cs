@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,7 +8,16 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, I
     [SerializeField] private MeshRenderer _focus; 
     [SerializeField] private MeshRenderer _select;
 
-    private Action<Cell> OnPointerClickEvent;
+    public event Action<Cell> OnPointerClickEvent;
+
+    public Unit CurrentUnit;
+
+    private Dictionary<Primitives.NeighbourType, Cell> _neighbours;
+
+    public void Init(Dictionary<Primitives.NeighbourType, Cell> neighbours)
+    {
+        _neighbours = neighbours;
+    }
     
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -27,7 +37,7 @@ public class Cell : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, I
     private void SetSelect(Material material)
     {
         _select.enabled = true;
-        _select.material = material;
+        _select.sharedMaterial = material;
     }
     
     private void ResetSelect()
