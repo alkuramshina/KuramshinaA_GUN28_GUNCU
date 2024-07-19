@@ -1,10 +1,13 @@
+using Board;
 using UnityEngine;
 using Zenject;
 
 public class GameInstaller : MonoInstaller
 {
     private Controls _controls;
-    private CellPaletteSettings _cellPaletteSettings;
+
+    [SerializeField] private CellManager cellManager;
+    [SerializeField] private CellPaletteSettings cellPaletteSettings;
     
     public override void InstallBindings()
     {
@@ -12,6 +15,6 @@ public class GameInstaller : MonoInstaller
         _controls.Game.Enable();
 
         Container.BindInstance(_controls.Game).AsSingle();
-        Container.BindInstance(_cellPaletteSettings).AsSingle();
+        Container.BindInstance(cellPaletteSettings).AsSingle();
     }
 }

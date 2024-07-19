@@ -1,5 +1,11 @@
 ﻿public class Primitives
 {
+    public enum ColorType
+    {
+        Black,
+        White
+    }
+        
     public enum NeighbourType
     {
         Left,

@@ -112,7 +112,7 @@ GameObject:
   - component: {fileID: 1967660290608557372}
   - component: {fileID: 1967660290608557368}
   m_Layer: 0
-  m_Name: WhiteCell
+  m_Name: Cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,6 +212,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _focus: {fileID: 3961825533200120792}
   _select: {fileID: 1837352415983403479}
+  CurrentUnit: {fileID: 0}
+  _cellPaletteSettings: {fileID: 11400000, guid: 52a90c9510170c948b515684caacbc5e, type: 2}
 --- !u!1 &3907169053107116393
 GameObject:
   m_ObjectHideFlags: 0
