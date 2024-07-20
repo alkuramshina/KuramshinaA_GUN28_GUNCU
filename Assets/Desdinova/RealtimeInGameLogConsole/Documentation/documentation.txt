@@ -1,0 +1,34 @@
+REALTIME IN GAME LOG CONSOLE
+-----------------------------
+
+HOW TO USE:
+Create a new GameObject in the Hierarcy and add the ConsoleGUIController component
+
+
+OPTIONS:
+
+Show Console: Show console at startup
+
+Show Stack Trace: Show the stack trace value of the log in the console
+
+Show Title: Show yhe title of the console (as in the Proejct Settings > Player > Product Name)
+
+Show Order: Order of the logs (Normal: last log at the bottom, Reverse: last log at the top)
+
+Key Code: Key to press to show/hide the console
+
+Key String: Key string to press to show/hide the console
+
+GUI Anchor: Anchor position of the console (Top of the screen, Bottom of the screen)
+
+GUI Height: Height othe the console (Full screen, Half screen, Qurter screen height)
+
+GUI Font Size: Size of the font in the console
+
+GUI Color: Background color of the console (use A value for opaque console)
+
+Do Not Destroy On Load: Don't destroy the GameObject during the session (usefull fo multi-scene applications)
+
+
+SUPPORT:
+info@desdinova.it

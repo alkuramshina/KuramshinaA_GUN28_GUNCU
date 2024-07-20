@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Settings;
+using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
@@ -15,8 +17,8 @@ namespace Board
 
         public Unit CurrentUnit;
 
-        private Dictionary<Primitives.NeighbourType, Cell> _neighbours;
-        private Primitives.ColorType _colorType;
+        private Dictionary<NeighbourType, Cell> _neighbours;
+        private ColorType _colorType;
         private MeshRenderer _defaultMesh;
 
         [SerializeField] private CellPaletteSettings _cellPaletteSettings;
@@ -26,7 +28,7 @@ namespace Board
             _defaultMesh = GetComponent<MeshRenderer>();
         }
 
-        public void Set(Dictionary<Primitives.NeighbourType, Cell> neighbours)
+        public void Set(Dictionary<NeighbourType, Cell> neighbours)
         {
             _neighbours = neighbours;
         }
@@ -46,13 +48,13 @@ namespace Board
             _focus.enabled = false;
         }
 
-        public void SetColor(Primitives.ColorType color)
+        public void SetColor(ColorType color)
         {
             _colorType = color;
             _defaultMesh.sharedMaterial = _colorType switch
             {
-                Primitives.ColorType.Black => _cellPaletteSettings.blackCell,
-                Primitives.ColorType.White => _cellPaletteSettings.whiteCell,
+                ColorType.Black => _cellPaletteSettings.blackCell,
+                ColorType.White => _cellPaletteSettings.whiteCell,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

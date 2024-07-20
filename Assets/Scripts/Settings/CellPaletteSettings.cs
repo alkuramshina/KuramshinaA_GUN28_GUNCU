@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Board
+namespace Settings
 {
     [CreateAssetMenu(fileName = "CellPalette", menuName = "ScriptableObjects/CellPaletteSettings", order = 1)]
     public class CellPaletteSettings: ScriptableObject

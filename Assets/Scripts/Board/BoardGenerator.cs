@@ -13,7 +13,7 @@ namespace Board
             Transform boardTransform)
         {
             var board = new Cell[BOARD_SIZE, BOARD_SIZE];
-            var currentCellColor = Primitives.ColorType.Black;
+            var currentCellColor = ColorType.Black;
 
             var cellSize = cellPrefab.transform.localScale.x;
             var cellOffsetX = cellPrefab.transform.localScale.x / 2;
@@ -44,8 +44,8 @@ namespace Board
             return ConfigureNeighbours(board);
         }
 
-        private static Primitives.ColorType GetOpponentColor(Primitives.ColorType currentColor)
-            => currentColor == Primitives.ColorType.Black ? Primitives.ColorType.White : Primitives.ColorType.Black;
+        private static ColorType GetOpponentColor(ColorType currentColor)
+            => currentColor == ColorType.Black ? ColorType.White : ColorType.Black;
 
         private List<Cell> ConfigureNeighbours(Cell[,] board)
         {
@@ -54,27 +54,27 @@ namespace Board
             {
                 for (var column = 0; column < BOARD_SIZE; column++)
                 {
-                    var cellNeighbors = new Dictionary<Primitives.NeighbourType, Cell>
+                    var cellNeighbors = new Dictionary<NeighbourType, Cell>
                     {
-                        { Primitives.NeighbourType.Left, column - 1 >= 0 ? board[row, column - 1] : null },
+                        { NeighbourType.Left, column - 1 >= 0 ? board[row, column - 1] : null },
                         {
-                            Primitives.NeighbourType.UpLeft,
+                            NeighbourType.UpLeft,
                             row + 1 < BOARD_SIZE && column - 1 >= 0 ? board[row + 1, column - 1] : null
                         },
-                        { Primitives.NeighbourType.Up, row + 1 < BOARD_SIZE ? board[row + 1, column] : null },
+                        { NeighbourType.Up, row + 1 < BOARD_SIZE ? board[row + 1, column] : null },
                         {
-                            Primitives.NeighbourType.UpRight,
+                            NeighbourType.UpRight,
                             row + 1 < BOARD_SIZE && column + 1 < BOARD_SIZE ? board[row + 1, column + 1] : null
                         },
-                        { Primitives.NeighbourType.Right, column + 1 < BOARD_SIZE ? board[row, column + 1] : null },
+                        { NeighbourType.Right, column + 1 < BOARD_SIZE ? board[row, column + 1] : null },
                         {
-                            Primitives.NeighbourType.DownRight,
+                            NeighbourType.DownRight,
                             row - 1 >= 0 && column + 1 < BOARD_SIZE ? board[row - 1, column + 1] : null
                         },
-                        { Primitives.NeighbourType.Down, row - 1 >= 0 ? board[row - 1, column] : null },
+                        { NeighbourType.Down, row - 1 >= 0 ? board[row - 1, column] : null },
                         {
-                            Primitives.NeighbourType.DownLeft,
-                            row - 1 >= 0 && column -                                             1 >= 0 ? board[row - 1, column - 1] : null
+                            NeighbourType.DownLeft,
+                            row - 1 >= 0 && column - 1 >= 0 ? board[row - 1, column - 1] : null
                         }
                     };
 

@@ -1,26 +1,23 @@
-﻿public class Primitives
+﻿public enum ColorType
 {
-    public enum ColorType
-    {
-        Black,
-        White
-    }
+    Black,
+    White
+}
         
-    public enum NeighbourType
-    {
-        Left,
-        UpLeft,
-        Up,
-        UpRight,
-        Right,
-        DownRight,
-        Down,
-        DownLeft
-    }
+public enum NeighbourType
+{
+    Left,
+    UpLeft,
+    Up,
+    UpRight,
+    Right,
+    DownRight,
+    Down,
+    DownLeft
+}
 
-    public enum Team
-    {
-        Player1 = 1,
-        Player2 = 2
-    }
+public enum Team
+{
+    Player1 = 1,
+    Player2 = 2
 }

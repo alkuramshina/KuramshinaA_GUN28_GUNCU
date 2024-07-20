@@ -1,9 +1,12 @@
 using Zenject;
 
-public class MainInstaller : MonoInstaller
+namespace Installers
 {
-    public override void InstallBindings()
+    public class MainInstaller : MonoInstaller
     {
-        Container.Bind<SceneController>().AsSingle();
+        public override void InstallBindings()
+        {
+            Container.Bind<SceneController>().AsSingle();
+        }
     }
 }
