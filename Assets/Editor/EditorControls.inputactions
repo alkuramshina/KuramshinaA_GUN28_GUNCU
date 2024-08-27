@@ -1,0 +1,54 @@
+{
+    "name": "EditorControls",
+    "maps": [
+        {
+            "name": "Cheats",
+            "id": "dcf64f73-7dcc-4a5a-ae8e-eea627a88a96",
+            "actions": [
+                {
+                    "name": "NextTurn",
+                    "type": "Button",
+                    "id": "345ad860-e1e5-4b17-a4f1-ef8624fcc8a0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Kill",
+                    "type": "Button",
+                    "id": "544fd7ef-eba3-4d90-9859-c7a5a8bdd243",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4a99ac6b-aeb0-418d-ad72-ea765e0f1b5c",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextTurn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7b646163-29a5-48a7-b9b5-db746f57b78a",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Kill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

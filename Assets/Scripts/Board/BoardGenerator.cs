@@ -47,7 +47,7 @@ namespace Board
         private static ColorType GetOpponentColor(ColorType currentColor)
             => currentColor == ColorType.Black ? ColorType.White : ColorType.Black;
 
-        private List<Cell> ConfigureNeighbours(Cell[,] board)
+        private static List<Cell> ConfigureNeighbours(Cell[,] board)
         {
             var cells = new List<Cell>();
             for (var row = 0; row < BOARD_SIZE; row++)
