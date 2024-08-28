@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1bb9bde827640ac9f61dc69c5332648, type: 3}
   m_Name: CellPalette
   m_EditorClassIdentifier: 
-  Selected: {fileID: 0}
-  CanMove: {fileID: 0}
-  CanStrike: {fileID: 0}
+  selected: {fileID: 2100000, guid: b4910afc34068b94a8e7146a7b8ff122, type: 2}
   whiteCell: {fileID: 2100000, guid: 628abbbe44b045744a114caffdfc278e, type: 2}
   blackCell: {fileID: 2100000, guid: 843fd8ced52abc64687fe40731287894, type: 2}

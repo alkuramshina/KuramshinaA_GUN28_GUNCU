@@ -210,10 +210,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 023ce5eafcc12b540b4f45b0d4f7af03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _focus: {fileID: 3961825533200120792}
-  _select: {fileID: 1837352415983403479}
+  focus: {fileID: 0}
+  select: {fileID: 0}
+  defaultMesh: {fileID: 1967660290608557373}
+  cellPaletteSettings: {fileID: 11400000, guid: 52a90c9510170c948b515684caacbc5e, type: 2}
   CurrentUnit: {fileID: 0}
-  _cellPaletteSettings: {fileID: 11400000, guid: 52a90c9510170c948b515684caacbc5e, type: 2}
 --- !u!1 &3907169053107116393
 GameObject:
   m_ObjectHideFlags: 0

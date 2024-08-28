@@ -15,9 +15,3 @@ public enum NeighbourType
     Down,
     DownLeft
 }
-
-public enum Team
-{
-    Player1 = 1,
-    Player2 = 2
-}

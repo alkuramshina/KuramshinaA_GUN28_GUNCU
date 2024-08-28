@@ -1,22 +1,23 @@
-using System;
 using System.Collections.Generic;
 using Units;
 using UnityEngine;
+using Zenject;
 
 namespace Board
 {
     public class CellManager : MonoBehaviour
     {
         private List<Cell> _board;
-        private Unit[] _units;
+        private List<Unit> _units;
+
+        [Inject] private BoardGenerator _boardGenerator;
 
         private void Start()
         {
-            var boardGenerator = GetComponent<BoardGenerator>();
-            _board = boardGenerator.Generate(OnCellClicked, transform);
+            (_board, _units) = _boardGenerator.Generate(OnCellClicked);
         }
     
-        private void OnCellClicked(Cell cell)
+        private void OnCellClicked(BaseBoardElement cell)
         {
         }
     }
