@@ -7,13 +7,16 @@ namespace Units
 {
     public class Unit : BaseElement
     {
+        [SerializeField] private MeshRenderer inDanger; 
+        
         public event Action OnMoveEndCallback;
 
         private const float MovingSpeed = 4f;
         public UnitDirection Direction { get; private set; }
 
-        public void TurnAround()
+        public void LevelUp()
         {
+            Debug.Log("End of board! Level Up!");
             Direction = Direction == UnitDirection.Down 
                 ? UnitDirection.Up 
                 : UnitDirection.Down;
@@ -61,7 +64,6 @@ namespace Units
         public override void SetSelected(bool selected)
         {
             IsSelected = selected;
-            Pair.SetSelected(selected);
 
             if (selected)
             {
@@ -71,6 +73,11 @@ namespace Units
             {
                 SetDefaultColor();
             }
+        }
+
+        public void SetInDanger(bool danger)
+        {
+            inDanger.enabled = danger;
         }
 
         public Vector3 CalculateUnitPosition(Cell onCell)

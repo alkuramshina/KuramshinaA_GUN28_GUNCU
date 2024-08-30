@@ -49,7 +49,7 @@ namespace Controllers
 
     public struct Player
     {
-        public ColorType Color { get; private set; }
+        public ColorType Color { get; }
 
         public Player(ColorType color)
         {

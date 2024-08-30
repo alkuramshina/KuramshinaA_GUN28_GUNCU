@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Board;
 using Settings;
 using Units;
@@ -23,7 +25,6 @@ namespace Controllers
         private void Start()
         {
             (_board, _units) = _battlefield.Generate(MoveToCell, SelectUnit, EndUnitMove);
-            
             _activePlayer = _playerController.Start(ColorType.White);
         }
     
@@ -34,6 +35,8 @@ namespace Controllers
             
             if (!nextCell.IsSelected || _selectedUnit is null)
                 return;
+            
+            Unselect(_selectedUnit);
 
             _isMoving = true;
 
@@ -41,9 +44,9 @@ namespace Controllers
             
             StartCoroutine(_selectedUnit.Move(cell));
             
-            if (cell.AtTheEndOfBoard(_selectedUnit.Direction))
+            if (cell.AtTheEndOfBoardFor(_selectedUnit.Direction))
             {
-                _selectedUnit.TurnAround();
+                _selectedUnit.LevelUp();
             }
 
             _isMoving = false;
@@ -73,57 +76,61 @@ namespace Controllers
         private void HighlightPossibleMoves()
         {
             var currentCell = (Cell) _selectedUnit.Pair;
-
+            
             if (_selectedUnit.Direction == UnitDirection.Up)
             {
-                HighlightNeighborIfAvailable(currentCell, NeighbourType.TopRight);
-                HighlightNeighborIfAvailable(currentCell, NeighbourType.TopLeft);
+                HighlightIfAvailable(new List<Cell> { currentCell }, NeighbourType.TopRight);
+                HighlightIfAvailable(new List<Cell> { currentCell }, NeighbourType.TopLeft);
             }
             else
             {
-                HighlightNeighborIfAvailable(currentCell, NeighbourType.BottomLeft);
-                HighlightNeighborIfAvailable(currentCell, NeighbourType.BottomRight);
+                HighlightIfAvailable(new List<Cell> { currentCell }, NeighbourType.BottomLeft);
+                HighlightIfAvailable(new List<Cell> { currentCell }, NeighbourType.BottomRight);
             }
         }
-        
-        private void HighlightNeighborIfAvailable(Cell currentCell,
+
+        private void HighlightIfAvailable(List<Cell> path,
             NeighbourType neighborType)
         {
+            var currentCell = path.Last();
             var availableCell = currentCell.Neighbours[neighborType];
             if (availableCell is null)
             {
                 return;
             }
-            
+
             if (availableCell.IsEmpty)
             {
                 availableCell.SetSelected(true);
+                path.Add(availableCell);
             }
             else if (availableCell.Pair.GetColor == Battlefield.GetOpponentColor(_activePlayer.Color))
             {
                 var cellToMoveAfterEating = availableCell.Neighbours[neighborType];
-                if (cellToMoveAfterEating is not null && cellToMoveAfterEating.IsEmpty)
-                {
-                    cellToMoveAfterEating.SetSelected(true);
-                }
+                if (cellToMoveAfterEating is null || !cellToMoveAfterEating.IsEmpty) 
+                    return;
+                
+                ((Unit)availableCell.Pair).SetInDanger(true);
+                cellToMoveAfterEating.SetSelected(true);
+                path.Add(cellToMoveAfterEating);
+
+                HighlightIfAvailable(path, neighborType);
             }
         }
 
-        private static void Unselect(Unit unit)
+        private void Unselect(Unit unit)
         {
             unit.SetSelected(false);
 
-            var cell = (Cell) unit.Pair;
-            foreach (var cellNeighbor in cell.Neighbours)
+            foreach (var cell in _board)
             {
-                cellNeighbor.Value?.SetSelected(false);
+                cell.SetSelected(false);
+                ((Unit)cell.Pair)?.SetInDanger(false);
             }
         }
 
         private void EndUnitMove()
         {
-            Unselect(_selectedUnit);
-            
             _selectedUnit = null;
             _activePlayer = _playerController.NextTurn(Battlefield.GetOpponentColor(_activePlayer.Color));
         }

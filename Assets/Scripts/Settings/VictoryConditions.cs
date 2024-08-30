@@ -13,7 +13,7 @@ namespace Settings
             ColorType playerColor)
             => units.Any(x => x.GetColor == playerColor);
 
-        public static bool AtTheEndOfBoard(this Cell cell, UnitDirection direction)
+        public static bool AtTheEndOfBoardFor(this Cell cell, UnitDirection direction)
         {
             return direction switch
             {
