@@ -37,25 +37,31 @@ namespace Units
             nextCell.SetNewPair(this);
         }
         
-        public override void SetFocused(bool focus)
+        public override void SetFocused(bool focused)
         {
-            if (!focus)
+            if (focused)
+            {
+                defaultMesh.sharedMaterial = cellPaletteSettings.focused;
+            }
+            else
             {
                 SetDefaultColor();
-                return;
             }
+        }
+
+        public override void SetSelected(bool selected)
+        {
+            IsSelected = selected;
+            IsFocused = false;
             
-            defaultMesh.sharedMaterial = cellPaletteSettings.selected;
-        }
-
-        public override void OnPointerEnter(PointerEventData eventData)
-        {
-            UpdateFocus((Cell) Pair, true);
-        }
-
-        public override void OnPointerExit(PointerEventData eventData)
-        {
-            UpdateFocus((Cell) Pair, false);
+            if (selected)
+            {
+                defaultMesh.sharedMaterial = cellPaletteSettings.selected;
+            }
+            else
+            {
+                SetDefaultColor();
+            }
         }
 
         public Vector3 CalculateUnitPosition(Cell onCell)

@@ -22,15 +22,7 @@ namespace Board
 
             _nextPosition = CalculateNext(0);
         }
-
-        private void Update()
-        {
-            // if (Input.GetKeyDown(KeyCode.Space) && !_cameraIsMoving)
-            // {
-            //     StartCoroutine(MoveCameraToNextPov());
-            // }
-        }
-
+        
         public IEnumerator MoveCameraToNextPov()
         {
             _cameraIsMoving = true;

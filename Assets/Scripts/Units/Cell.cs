@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Units;
 using UnityEngine;
@@ -15,7 +14,13 @@ namespace Board
 
         public ColorType? IsVictoriousFor { get; private set; }
         public bool IsEmpty => Pair is null;
-        
+
+        private void Start()
+        {
+            focus.sharedMaterial = cellPaletteSettings.focused;
+            select.sharedMaterial = cellPaletteSettings.selected;
+        }
+
         public void Set(Dictionary<NeighbourType, Cell> neighbours)
         {
             if (Neighbours is not null) return;
@@ -29,27 +34,17 @@ namespace Board
                     ? ColorType.Black
                     : null;
         }
-        
-        public void SetSelected(bool selected)
-        {
-            select.enabled = selected;
-            select.sharedMaterial = cellPaletteSettings.selected;
-        }
 
         public override void SetFocused(bool focused)
         {
             focus.enabled = focused;
-            focus.sharedMaterial = cellPaletteSettings.selected;
         }
 
-        public override void OnPointerEnter(PointerEventData eventData)
+        public override void SetSelected(bool selected)
         {
-            UpdateFocus(this, true);
-        }
-
-        public override void OnPointerExit(PointerEventData eventData)
-        {
-            UpdateFocus(this, false);
+            IsSelected = selected;
+            IsFocused = !selected;
+            select.enabled = selected;
         }
     }
 }

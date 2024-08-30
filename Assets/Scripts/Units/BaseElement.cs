@@ -1,5 +1,4 @@
 ﻿using System;
-using Board;
 using JetBrains.Annotations;
 using Settings;
 using UnityEngine;
@@ -44,25 +43,16 @@ namespace Units
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
-        
-        public bool IsHighlighted { get; private set; }
-        
-        public void SetHighlighted(bool selected)
-        {
-            IsHighlighted = selected;
-            SetFocused(selected);
-        }
 
-        public abstract void SetFocused(bool focus);
+        public bool IsFocused { get; set; }
+        public bool IsSelected { get; set; }
+
+        public abstract void SetFocused(bool focused);
+        public abstract void SetSelected(bool selected);
         
-        public event FocusEventHandler OnFocusEventHandler;
-        protected void UpdateFocus(Cell target, bool isSelect) => OnFocusEventHandler?.Invoke(target, isSelect);
-        
-        public abstract void OnPointerEnter(PointerEventData eventData);
-        public abstract void OnPointerExit(PointerEventData eventData);
+        public void OnPointerEnter(PointerEventData eventData) => SetFocused(true);
+        public void OnPointerExit(PointerEventData eventData) => SetFocused(false);
 
         public void OnPointerClick(PointerEventData eventData) => OnPointerClickEvent?.Invoke(this);
     }
-    
-    public delegate void FocusEventHandler(Cell cell, bool isSelect);
 }

@@ -20,20 +20,13 @@ namespace Controllers
 
         private void Start()
         {
-            (_board, _units) = _battlefield.Generate(SelectCell, SelectUnit, CheckToEat, FocusOn, EndMove);
+            (_board, _units) = _battlefield.Generate(SelectCell, SelectUnit, CheckToEat, EndMove);
             _currentPlayerColor = ColorType.White;
-        }
-        
-        private void FocusOn(BaseElement element, bool focused)
-        {
-            if (element.IsHighlighted) return;
-            element.SetFocused(focused);
-            element.Pair?.SetFocused(focused);
         }
     
         private void SelectCell(BaseElement nextCell)
         {
-            if (!nextCell.IsHighlighted || _selectedUnit is null)
+            if (!nextCell.IsSelected || _selectedUnit is null)
             {
                 return;
             }
@@ -53,10 +46,10 @@ namespace Controllers
                 RemoveHighlight(_selectedUnit);
             }
 
-            unit.SetHighlighted(true);
+            unit.SetSelected(true);
 
             var cell = (Cell) unit.Pair;
-            cell.SetHighlighted(true);
+            cell.SetSelected(true);
             
             HighlightNeighborIfAvailable(cell, NeighbourType.TopRight);
 
@@ -85,28 +78,28 @@ namespace Controllers
             
             if (availableCell.IsEmpty)
             {
-                availableCell.SetHighlighted(true);
+                availableCell.SetSelected(true);
             }
             else if (availableCell.Pair.GetColor == Battlefield.GetOpponentColor(_currentPlayerColor))
             {
                 var cellToMoveAfterEating = availableCell.Neighbours[neighborType];
                 if (cellToMoveAfterEating is not null && cellToMoveAfterEating.IsEmpty)
                 {
-                    cellToMoveAfterEating.SetHighlighted(true);
+                    cellToMoveAfterEating.SetSelected(true);
                 }
             }
         }
 
         private static void RemoveHighlight(Unit unit)
         {
-            unit.SetHighlighted(false);
+            unit.SetSelected(false);
                 
             var cell = (Cell) unit.Pair;
-            cell.SetHighlighted(false);
+            cell.SetSelected(false);
             
             foreach (var cellNeighbor in cell.Neighbours)
             {
-                cellNeighbor.Value?.SetHighlighted(false);
+                cellNeighbor.Value?.SetSelected(false);
             }
         }
 
@@ -143,7 +136,6 @@ namespace Controllers
 
             unitToEat.OnPointerClickEvent -= SelectUnit;
             unitToEat.OnCrossAnotherUnitHandler -= CheckToEat;
-            unitToEat.OnFocusEventHandler -= FocusOn;
             unitToEat.OnMoveEndCallback -= EndMove;
             
             Destroy(unitToEat.gameObject);

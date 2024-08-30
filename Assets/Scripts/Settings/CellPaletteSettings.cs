@@ -8,6 +8,7 @@ namespace Settings
     public class CellPaletteSettings: ScriptableObject
     {
         public Material selected;
+        public Material focused;
         
         public Material whiteCell;
         public Material blackCell;

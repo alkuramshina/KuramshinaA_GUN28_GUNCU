@@ -17,7 +17,7 @@ namespace Board
 
         public (List<Cell>, List<Unit>) Generate(Action<BaseElement> onCellClicked,
             Action<BaseElement> onUnitClicked,
-            CrossAnotherUnitHandler onCheckToEat, FocusEventHandler onFocused,
+            CrossAnotherUnitHandler onCheckToEat,
             Action onUnitMoveEnded)
         {
             if (FindAnyObjectByType<Cell>() is not null)
@@ -42,21 +42,21 @@ namespace Board
                     var position = new Vector3(cellOffsetX + row * cellSize, 0, cellOffsetZ + column * cellSize);
                     var newCell = CreateCell(position, transform, row, column,
                         currentCellColor,
-                        onCellClicked, onFocused);
+                        onCellClicked);
 
                     Unit possibleNewUnit = null;
                     // если это начало доски и мы на играбельном цвете - белые шашки
                     if (currentCellColor == playableCellColor && 0 <= row && row < startingUnitRows)
                     {
                         possibleNewUnit = CreateUnit(newCell, transform, ColorType.White, onUnitClicked, onCheckToEat,
-                            onFocused, onUnitMoveEnded);
+                            onUnitMoveEnded);
                     }
                     else
                         // если это конец доски и мы на играбельном цвете - черные шашки
                     if (currentCellColor == playableCellColor && row >= BOARD_SIZE - startingUnitRows)
                     {
                         possibleNewUnit = CreateUnit(newCell, transform, ColorType.Black, onUnitClicked, onCheckToEat,
-                            onFocused, onUnitMoveEnded);
+                            onUnitMoveEnded);
                     }
 
                     if (possibleNewUnit is not null)
@@ -79,7 +79,7 @@ namespace Board
         private Cell CreateCell(Vector3 cellPosition, Transform boardTransform,
             int row, int column,
             ColorType color,
-            Action<BaseElement> onCellClicked, FocusEventHandler onFocused)
+            Action<BaseElement> onCellClicked)
         {
             Cell newCell = Instantiate(cellPrefab, cellPosition,
                 Quaternion.identity,
@@ -88,14 +88,13 @@ namespace Board
             newCell.name = $"Cell{row}{column}";
             newCell.SetColor(color);
             newCell.OnPointerClickEvent += onCellClicked;
-            newCell.OnFocusEventHandler += onFocused;
 
             return newCell;
         }
 
         private Unit CreateUnit(Cell cell, Transform boardTransform, ColorType color,
             Action<BaseElement> onUnitClicked,
-            CrossAnotherUnitHandler onCheckToEat, FocusEventHandler onFocused,
+            CrossAnotherUnitHandler onCheckToEat,
             Action onUnitMoveEnded)
         {
             var position = unitPrefab.CalculateUnitPosition(cell);
@@ -107,7 +106,6 @@ namespace Board
             
             newUnit.OnPointerClickEvent += onUnitClicked;
             newUnit.OnCrossAnotherUnitHandler += onCheckToEat;
-            newUnit.OnFocusEventHandler += onFocused;
             newUnit.OnMoveEndCallback += onUnitMoveEnded;
 
             return newUnit;
