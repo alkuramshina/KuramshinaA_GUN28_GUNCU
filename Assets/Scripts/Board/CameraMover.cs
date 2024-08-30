@@ -22,8 +22,13 @@ namespace Board
 
             _nextPosition = CalculateNext(0);
         }
+
+        public void MoveToNextPov()
+        {
+            StartCoroutine(CameraMovement());
+        }
         
-        public IEnumerator MoveCameraToNextPov()
+        private IEnumerator CameraMovement()
         {
             _cameraIsMoving = true;
 

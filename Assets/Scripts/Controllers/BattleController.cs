@@ -13,18 +13,19 @@ namespace Controllers
         private List<Unit> _units;
 
         private Battlefield _battlefield;
-        private CameraMover _cameraMover;
+        private PlayerController _playerController;
         
         private ColorType _currentPlayerColor;
         private Unit _selectedUnit;
 
         private void Start()
         {
-            (_board, _units) = _battlefield.Generate(SelectCell, SelectUnit, CheckToEat, EndMove);
+            (_board, _units) = _battlefield.Generate(MoveToCell, SelectUnit, CheckToEat, EndUnitMove);
             _currentPlayerColor = ColorType.White;
+            _playerController.FirstMove(_currentPlayerColor);
         }
     
-        private void SelectCell(BaseElement nextCell)
+        private void MoveToCell(BaseElement nextCell)
         {
             if (!nextCell.IsSelected || _selectedUnit is null)
             {
@@ -103,18 +104,13 @@ namespace Controllers
             }
         }
 
-        private void EndMove()
+        private void EndUnitMove()
         {
             Unselect(_selectedUnit);
             _selectedUnit = null;
             
             _currentPlayerColor = Battlefield.GetOpponentColor(_currentPlayerColor);
-            Debug.Log($@"Ход у {(_currentPlayerColor switch
-            { ColorType.White => "белых",
-                ColorType.Black => "черных",
-                _ => "кого-то" })}.");
-
-            StartCoroutine(_cameraMover.MoveCameraToNextPov());
+            _playerController.NextMove(_currentPlayerColor);
         }
         
         private void CheckToEat(Unit unit, Unit unitToEat)
@@ -137,16 +133,16 @@ namespace Controllers
 
             unitToEat.OnPointerClickEvent -= SelectUnit;
             unitToEat.OnCrossAnotherUnitHandler -= CheckToEat;
-            unitToEat.OnMoveEndCallback -= EndMove;
+            unitToEat.OnMoveEndCallback -= EndUnitMove;
             
             Destroy(unitToEat.gameObject);
         }
 
         [Inject] 
-        public void Init(Battlefield battlefield, CameraMover cameraMover)
+        public void Init(Battlefield battlefield, PlayerController playerController)
         {
             _battlefield = battlefield;
-            _cameraMover = cameraMover;
+            _playerController = playerController;
         }
     }
 }
