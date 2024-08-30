@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Common;
 using Units;
 using UnityEngine;
@@ -38,17 +37,13 @@ namespace Board
 
         private void HighlightPath(Unit selectedUnit, Cell currentCell, NeighbourType direction)
         {
-            var path = new List<Cell> { currentCell };
-            
-            HighlightAvailable(selectedUnit, path, direction, attackOnly: false);
-            HighlightAvailable(selectedUnit, path, direction.GetOpposite(), attackOnly: true);
+            HighlightAvailable(selectedUnit, currentCell, direction);
+            HighlightAvailableOnlyForAttack(selectedUnit, currentCell, direction.GetOpposite());
         }
 
-        private void HighlightAvailable(Unit selectedUnit, List<Cell> path,
-            NeighbourType neighborType,
-            bool attackOnly)
+        private void HighlightAvailable(Unit selectedUnit, Cell currentCell,
+            NeighbourType neighborType)
         {
-            var currentCell = path.Last();
             var availableCell = currentCell.Neighbours[neighborType];
             if (availableCell is null)
             {
@@ -58,7 +53,6 @@ namespace Board
             if (availableCell.IsEmpty)
             {
                 availableCell.SetSelected(true);
-                path.Add(availableCell);
             }
             else if (availableCell.Pair.GetColor == selectedUnit.GetColor.GetOpponentColor())
             {
@@ -68,10 +62,30 @@ namespace Board
                 
                 ((Unit)availableCell.Pair).SetInDanger(true);
                 cellToMoveAfterEating.SetSelected(true);
-                path.Add(cellToMoveAfterEating);
 
-                HighlightAvailable(selectedUnit, path, neighborType, attackOnly);
+                HighlightAvailable(selectedUnit, cellToMoveAfterEating, neighborType);
             }
+        }
+        
+        private void HighlightAvailableOnlyForAttack(Unit selectedUnit, Cell currentCell,
+            NeighbourType neighborType)
+        {
+            var nextCell = currentCell.Neighbours[neighborType];
+            if (nextCell is null || nextCell.IsEmpty || nextCell.Pair.GetColor == selectedUnit.GetColor)
+            {
+                return;
+            }
+            
+            var cellToMoveAfterEating = nextCell.Neighbours[neighborType];
+            if (cellToMoveAfterEating is null || !cellToMoveAfterEating.IsEmpty)
+            {
+                return;
+            }
+            
+            ((Unit)nextCell.Pair).SetInDanger(true);
+            cellToMoveAfterEating.SetSelected(true);
+
+            HighlightAvailableOnlyForAttack(selectedUnit, cellToMoveAfterEating, neighborType);
         }
         
         [Inject]

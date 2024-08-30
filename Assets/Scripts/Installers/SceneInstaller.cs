@@ -10,7 +10,8 @@ namespace Installers
     {
         private Controls _controls;
         
-        [SerializeField] private BoardGenerator battlefieldGenerator;
+        [SerializeField] private Board.Board board;
+        [SerializeField] private BoardGenerator boardGeneratorGenerator;
         [SerializeField] private CameraMover cameraMover;
         [SerializeField] private RoundCounter roundCounter;
         
@@ -20,7 +21,8 @@ namespace Installers
             _controls.Game.Enable();
             
             Container.BindInstance(_controls.Game).AsSingle();
-            Container.BindInstance(battlefieldGenerator).AsSingle();
+            Container.BindInstance(board).AsSingle();
+            Container.BindInstance(boardGeneratorGenerator).AsSingle();
             Container.BindInstance(cameraMover).AsSingle();
             Container.BindInstance(roundCounter).AsSingle();
             Container.Bind<PlayerController>().AsSingle();

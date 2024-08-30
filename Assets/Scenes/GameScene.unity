@@ -201,7 +201,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c026a998355484eb2e7d1b0a0ac770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardGenerator: {fileID: 891775803}
+  board: {fileID: 891775803}
+  boardGeneratorGenerator: {fileID: 2060287469}
   cameraMover: {fileID: 1281627679}
   roundCounter: {fileID: 1438988965}
 --- !u!114 &239979555
@@ -645,10 +646,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b134c8217ed41f3a339374b17edb20b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellPrefab: {fileID: 1967660290608557368, guid: 1966f02e725b8b24394fc1930b5a3fa1, type: 3}
-  unitPrefab: {fileID: 8719686461929352966, guid: 982670db9d47b404cb59fbc3e9a1a6ce, type: 3}
-  playableCellColor: 0
-  startingUnitRows: 3
 --- !u!1 &996196792
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,6 +1213,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2060287468}
   - component: {fileID: 2060287467}
+  - component: {fileID: 2060287469}
   m_Layer: 0
   m_Name: Cell Manager
   m_TagString: Untagged
@@ -1251,6 +1249,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2060287469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060287466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fea56cf37734402682da1792e77fb687, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellPrefab: {fileID: 1967660290608557368, guid: 1966f02e725b8b24394fc1930b5a3fa1, type: 3}
+  unitPrefab: {fileID: 8719686461929352966, guid: 982670db9d47b404cb59fbc3e9a1a6ce, type: 3}
+  playableCellColor: 0
+  startingUnitRows: 3
 --- !u!1 &2112728901
 GameObject:
   m_ObjectHideFlags: 0
