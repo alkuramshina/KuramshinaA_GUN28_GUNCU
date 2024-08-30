@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using Board;
-using Settings;
+using Common;
 using Units;
 using UnityEngine;
 using Zenject;
@@ -10,10 +9,10 @@ namespace Controllers
 {
     public class BattleController : MonoBehaviour
     {
-        private List<Cell> _board;
+        private List<Cell> _cells;
         private List<Unit> _units;
 
-        private Battlefield _battlefield;
+        private Board.Board _board;
         private PlayerController _playerController;
         
         private Unit _selectedUnit;
@@ -23,7 +22,7 @@ namespace Controllers
 
         private void Start()
         {
-            (_board, _units) = _battlefield.Generate(MoveToCell, SelectUnit, EndUnitMove, CheckToEat);
+            (_cells, _units) = _board.Generate(MoveToCell, SelectUnit, EndUnitMove, CheckToEat);
             _activePlayer = _playerController.Start(ColorType.White);
         }
     
@@ -62,65 +61,15 @@ namespace Controllers
             _selectedUnit = (Unit) unit;
             
             unit.SetSelected(true);
-            HighlightPossiblePaths();
-        }
-
-        private void HighlightPossiblePaths()
-        {
-            var currentCell = (Cell) _selectedUnit.Pair;
             
-            if (_selectedUnit.Direction == UnitDirection.Up)
-            {
-                HighlightPath(currentCell, NeighbourType.TopRight);
-                HighlightPath(currentCell, NeighbourType.TopLeft);
-            }
-            else
-            {
-                HighlightPath(currentCell, NeighbourType.BottomLeft);
-                HighlightPath(currentCell, NeighbourType.BottomRight);
-            }
-        }
-
-        private void HighlightPath(Cell currentCell, NeighbourType direction)
-        {
-            var path = new List<Cell> { currentCell };
-            HighlightAvailable(path, direction);
-        }
-
-        private void HighlightAvailable(List<Cell> path,
-            NeighbourType neighborType)
-        {
-            var currentCell = path.Last();
-            var availableCell = currentCell.Neighbours[neighborType];
-            if (availableCell is null)
-            {
-                return;
-            }
-
-            if (availableCell.IsEmpty)
-            {
-                availableCell.SetSelected(true);
-                path.Add(availableCell);
-            }
-            else if (availableCell.Pair.GetColor == Battlefield.GetOpponentColor(_activePlayer.Color))
-            {
-                var cellToMoveAfterEating = availableCell.Neighbours[neighborType];
-                if (cellToMoveAfterEating is null || !cellToMoveAfterEating.IsEmpty) 
-                    return;
-                
-                ((Unit)availableCell.Pair).SetInDanger(true);
-                cellToMoveAfterEating.SetSelected(true);
-                path.Add(cellToMoveAfterEating);
-
-                HighlightAvailable(path, neighborType);
-            }
+            _board.HighlightPossiblePaths(_selectedUnit);
         }
 
         private void Unselect(Unit unit)
         {
             unit.SetSelected(false);
 
-            foreach (var cell in _board)
+            foreach (var cell in _cells)
             {
                 cell.SetSelected(false);
                 ((Unit)cell.Pair)?.SetInDanger(false);
@@ -130,7 +79,7 @@ namespace Controllers
         private void EndUnitMove()
         {
             _selectedUnit = null;
-            _activePlayer = _playerController.NextTurn(Battlefield.GetOpponentColor(_activePlayer.Color));
+            _activePlayer = _playerController.NextTurn(_activePlayer.Color.GetOpponentColor());
         }
         
         private void CheckToEat(Unit unit, Unit unitToEat)
@@ -146,7 +95,7 @@ namespace Controllers
 
             if (!_units.CheckIfAnyAlive(unitToEat.GetColor))
             {
-                VictoryConditions.Hooray(unit);
+                Extensions.Hooray(unit);
             }
 
             unitToEat.OnPointerClickEvent -= SelectUnit;
@@ -157,9 +106,9 @@ namespace Controllers
         }
 
         [Inject] 
-        public void Init(Battlefield battlefield, PlayerController playerController)
+        public void Init(Board.Board battlefield, PlayerController playerController)
         {
-            _battlefield = battlefield;
+            _board = battlefield;
             _playerController = playerController;
         }
     }

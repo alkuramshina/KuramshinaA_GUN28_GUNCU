@@ -1,5 +1,6 @@
 using Board;
 using Controllers;
+using Settings;
 using UnityEngine;
 using Zenject;
 
@@ -9,7 +10,7 @@ namespace Installers
     {
         private Controls _controls;
         
-        [SerializeField] private Battlefield boardGenerator;
+        [SerializeField] private BoardGenerator battlefieldGenerator;
         [SerializeField] private CameraMover cameraMover;
         [SerializeField] private RoundCounter roundCounter;
         
@@ -19,7 +20,7 @@ namespace Installers
             _controls.Game.Enable();
             
             Container.BindInstance(_controls.Game).AsSingle();
-            Container.BindInstance(boardGenerator).AsSingle();
+            Container.BindInstance(battlefieldGenerator).AsSingle();
             Container.BindInstance(cameraMover).AsSingle();
             Container.BindInstance(roundCounter).AsSingle();
             Container.Bind<PlayerController>().AsSingle();

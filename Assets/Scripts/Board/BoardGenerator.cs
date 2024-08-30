@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 using Units;
 using UnityEngine;
 
 namespace Board
 {
-    public class Battlefield : MonoBehaviour
+    public class BoardGenerator : MonoBehaviour
     {
         [SerializeField] private Cell cellPrefab;
         [SerializeField] private Unit unitPrefab;
@@ -67,10 +68,10 @@ namespace Board
 
                     board[row, column] = newCell;
 
-                    currentCellColor = GetOpponentColor(currentCellColor);
+                    currentCellColor = currentCellColor.GetOpponentColor();
                 }
 
-                currentCellColor = GetOpponentColor(currentCellColor);
+                currentCellColor = currentCellColor.GetOpponentColor();
             }
 
             return (ConfigureNeighbours(board), units);
@@ -110,10 +111,6 @@ namespace Board
 
             return newUnit;
         }
-
-
-        public static ColorType GetOpponentColor(ColorType currentColor)
-            => currentColor == ColorType.Black ? ColorType.White : ColorType.Black;
 
         private static List<Cell> ConfigureNeighbours(Cell[,] board)
         {

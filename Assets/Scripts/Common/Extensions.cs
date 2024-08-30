@@ -5,9 +5,9 @@ using Board;
 using Units;
 using UnityEngine;
 
-namespace Settings
+namespace Common
 {
-    public static class VictoryConditions
+    public static class Extensions
     {
         public static bool CheckIfAnyAlive(this IEnumerable<Unit> units,
             ColorType playerColor)
@@ -28,6 +28,25 @@ namespace Settings
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
+
+        public static NeighbourType GetOpposite(this NeighbourType type)
+        {
+            return type switch
+            {
+                NeighbourType.Left => NeighbourType.Right,
+                NeighbourType.TopLeft => NeighbourType.BottomRight,
+                NeighbourType.Top => NeighbourType.Bottom,
+                NeighbourType.TopRight => NeighbourType.BottomLeft,
+                NeighbourType.Right => NeighbourType.Left,
+                NeighbourType.BottomRight => NeighbourType.TopLeft,
+                NeighbourType.Bottom => NeighbourType.Top,
+                NeighbourType.BottomLeft => NeighbourType.TopRight,
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
+        }
+        
+        public static ColorType GetOpponentColor(this ColorType currentColor)
+            => currentColor == ColorType.Black ? ColorType.White : ColorType.Black;
 
         public static void Hooray(Unit unit)
         {

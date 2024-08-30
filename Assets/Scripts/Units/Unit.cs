@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Board;
+using Common;
 using Settings;
 using UnityEngine;
 
@@ -15,10 +16,17 @@ namespace Units
 
         private const float MovingSpeed = 4f;
         public UnitDirection Direction { get; private set; }
+        
+        public bool IsLeveledUp { get; private set; }
 
         private void LevelUp()
         {
-            Debug.Log("End of board! Level Up!");
+            IsLeveledUp = true;
+            ChangeDirection();
+        }
+        
+        private void ChangeDirection()
+        {
             Direction = Direction == UnitDirection.Down 
                 ? UnitDirection.Up 
                 : UnitDirection.Down;

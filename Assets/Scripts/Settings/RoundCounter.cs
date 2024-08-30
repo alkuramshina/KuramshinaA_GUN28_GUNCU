@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace Board
+namespace Settings
 {
     public class RoundCounter: MonoBehaviour
     {
