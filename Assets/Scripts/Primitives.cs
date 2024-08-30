@@ -7,11 +7,11 @@
 public enum NeighbourType
 {
     Left,
-    UpLeft,
-    Up,
-    UpRight,
+    TopLeft,
+    Top,
+    TopRight,
     Right,
-    DownRight,
-    Down,
-    DownLeft
+    BottomRight,
+    Bottom,
+    BottomLeft
 }

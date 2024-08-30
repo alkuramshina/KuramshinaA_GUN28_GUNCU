@@ -8,7 +8,8 @@ namespace Installers
     {
         private Controls _controls;
         
-        [SerializeField] private BoardGenerator boardGenerator;
+        [SerializeField] private Battlefield boardGenerator;
+        [SerializeField] private CameraMover cameraMover;
         
         public override void InstallBindings()
         {
@@ -17,6 +18,7 @@ namespace Installers
             
             Container.BindInstance(_controls.Game).AsSingle();
             Container.BindInstance(boardGenerator).AsSingle();
+            Container.BindInstance(cameraMover).AsSingle();
         }
     }
 }
