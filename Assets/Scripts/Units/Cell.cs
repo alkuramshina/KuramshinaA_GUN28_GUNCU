@@ -12,7 +12,6 @@ namespace Board
         [SerializeField] private MeshRenderer focus; 
         [SerializeField] private MeshRenderer select;
 
-        public ColorType? IsVictoriousFor { get; private set; }
         public bool IsEmpty => Pair is null;
 
         public bool IsNeighbour(Cell cell)
@@ -29,13 +28,6 @@ namespace Board
             if (Neighbours is not null) return;
             
             Neighbours = neighbours;
-            
-            IsVictoriousFor = neighbours[NeighbourType.TopLeft] is null && neighbours[NeighbourType.TopRight] is null
-                ? ColorType.White
-                : neighbours[NeighbourType.BottomLeft] is null &&
-                  neighbours[NeighbourType.BottomRight] is null
-                    ? ColorType.Black
-                    : null;
         }
 
         protected override void SetFocused(bool focused)

@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using Board;
-using Settings;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Units
@@ -10,9 +8,24 @@ namespace Units
     public class Unit : BaseElement
     {
         public event Action OnMoveEndCallback;
-        public event CrossAnotherUnitHandler OnCrossAnotherUnitHandler;
-        
+
         private const float MovingSpeed = 4f;
+        public UnitDirection Direction { get; private set; }
+
+        public void TurnAround()
+        {
+            Direction = Direction == UnitDirection.Down 
+                ? UnitDirection.Up 
+                : UnitDirection.Down;
+        }
+
+        public override void SetColor(ColorType color)
+        {
+            base.SetColor(color);
+            Direction = color == ColorType.White 
+                ? UnitDirection.Up 
+                : UnitDirection.Down;
+        }
 
         public IEnumerator Move(Cell nextCell)
         {
@@ -23,12 +36,6 @@ namespace Units
                     newPosition, MovingSpeed * Time.deltaTime);
 
                 yield return null;
-            }
-
-            if (this.CheckIfAtTheEndOfBoard(nextCell))
-            {
-                VictoryConditions.Hooray(this);
-                yield break;
             }
             
             OnMoveEndCallback?.Invoke();
@@ -54,6 +61,7 @@ namespace Units
         public override void SetSelected(bool selected)
         {
             IsSelected = selected;
+            Pair.SetSelected(selected);
 
             if (selected)
             {
@@ -77,6 +85,4 @@ namespace Units
             Debug.Log("Trigger");
         }
     }
-    
-    public delegate void CrossAnotherUnitHandler(Unit player, Unit crossed);
 }

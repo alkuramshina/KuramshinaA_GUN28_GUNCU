@@ -26,7 +26,7 @@ namespace Units
 
         private ColorType? _color;
         public ColorType GetColor => _color ?? throw new ArgumentNullException("Color is not assigned!");
-        public void SetColor(ColorType color)
+        public virtual void SetColor(ColorType color)
         {
             _color = color;
             SetDefaultColor();

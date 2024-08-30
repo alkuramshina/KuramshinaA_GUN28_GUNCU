@@ -16,7 +16,7 @@ namespace Board
             roundCounter.text = $"Round {_round}";
         }
 
-        public void UpdateMove(ColorType nextPlayer)
+        public void UpdateTurn(ColorType nextPlayer)
         {
             UpdateRound();
             

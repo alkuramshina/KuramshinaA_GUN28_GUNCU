@@ -1,4 +1,5 @@
-﻿using Board;
+﻿using System.Collections.Generic;
+using Board;
 using Zenject;
 
 namespace Controllers
@@ -7,16 +8,26 @@ namespace Controllers
     {
         private readonly CameraMover _cameraMover;
         private readonly RoundCounter _roundCounter;
+
+        private readonly Dictionary<ColorType, Player> _players;
+        private Player _activePlayer;
         
-        public void FirstMove(ColorType nextPlayer)
+        public Player Start(ColorType startingPlayerColor)
         {
-            _roundCounter.UpdateMove(nextPlayer);
+            _activePlayer = _players[startingPlayerColor];
+            _roundCounter.UpdateTurn(_activePlayer.Color);
+
+            return _activePlayer;
         }
         
-        public void NextMove(ColorType nextPlayer)
+        public Player NextTurn(ColorType playerColor)
         {
-            _roundCounter.UpdateMove(nextPlayer);
+            _activePlayer = _players[playerColor];
+            
+            _roundCounter.UpdateTurn(_activePlayer.Color);
             _cameraMover.MoveToNextPov();
+
+            return _activePlayer;
         }
 
         public bool IsLocked => _cameraMover.CameraIsMoving;
@@ -27,6 +38,22 @@ namespace Controllers
         {
             _cameraMover = cameraMover;
             _roundCounter = roundCounter;
+
+            _players = new Dictionary<ColorType, Player>
+            {
+                { ColorType.White, new Player(ColorType.White) },
+                { ColorType.Black, new Player(ColorType.Black) }
+            };
+        }
+    }
+
+    public struct Player
+    {
+        public ColorType Color { get; private set; }
+
+        public Player(ColorType color)
+        {
+            Color = color;
         }
     }
 }

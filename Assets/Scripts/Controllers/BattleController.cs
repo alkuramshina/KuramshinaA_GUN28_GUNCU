@@ -15,40 +15,46 @@ namespace Controllers
         private Battlefield _battlefield;
         private PlayerController _playerController;
         
-        private ColorType _currentPlayerColor;
         private Unit _selectedUnit;
+        private Player _activePlayer;
 
-        private bool IsMoving;
+        private bool _isMoving;
 
         private void Start()
         {
-            (_board, _units) = _battlefield.Generate(MoveToCell, SelectUnit, CheckToEat, EndUnitMove);
+            (_board, _units) = _battlefield.Generate(MoveToCell, SelectUnit, EndUnitMove);
             
-            _currentPlayerColor = ColorType.White;
-            _playerController.FirstMove(_currentPlayerColor);
+            _activePlayer = _playerController.Start(ColorType.White);
         }
     
         private void MoveToCell(BaseElement nextCell)
         {
-            if (_playerController.IsLocked || IsMoving)
+            if (_playerController.IsLocked || _isMoving)
                 return;
             
             if (!nextCell.IsSelected || _selectedUnit is null)
                 return;
 
-            IsMoving = true;
+            _isMoving = true;
 
-            StartCoroutine(_selectedUnit.Move((Cell) nextCell));
+            var cell = (Cell)nextCell;
+            
+            StartCoroutine(_selectedUnit.Move(cell));
+            
+            if (cell.AtTheEndOfBoard(_selectedUnit.Direction))
+            {
+                _selectedUnit.TurnAround();
+            }
 
-            IsMoving = false;
+            _isMoving = false;
         }
         
         private void SelectUnit(BaseElement unit)
         {
-            if (_playerController.IsLocked || IsMoving)
+            if (_playerController.IsLocked || _isMoving)
                 return;
             
-            if (unit.GetColor != _currentPlayerColor)
+            if (unit.GetColor != _activePlayer.Color)
             {
                 return;
             }
@@ -58,25 +64,26 @@ namespace Controllers
                 Unselect(_selectedUnit);
             }
 
-            unit.SetSelected(true);
-
-            var cell = (Cell) unit.Pair;
-            cell.SetSelected(true);
+            _selectedUnit = (Unit) unit;
             
-            HighlightNeighborIfAvailable(cell, NeighbourType.TopRight);
+            unit.SetSelected(true);
+            HighlightPossibleMoves();
+        }
 
-            if (unit.GetColor == ColorType.White)
+        private void HighlightPossibleMoves()
+        {
+            var currentCell = (Cell) _selectedUnit.Pair;
+
+            if (_selectedUnit.Direction == UnitDirection.Up)
             {
-                HighlightNeighborIfAvailable(cell, NeighbourType.TopRight);
-                HighlightNeighborIfAvailable(cell, NeighbourType.TopLeft);
+                HighlightNeighborIfAvailable(currentCell, NeighbourType.TopRight);
+                HighlightNeighborIfAvailable(currentCell, NeighbourType.TopLeft);
             }
             else
             {
-                HighlightNeighborIfAvailable(cell, NeighbourType.BottomLeft);
-                HighlightNeighborIfAvailable(cell, NeighbourType.BottomRight);
+                HighlightNeighborIfAvailable(currentCell, NeighbourType.BottomLeft);
+                HighlightNeighborIfAvailable(currentCell, NeighbourType.BottomRight);
             }
-            
-            _selectedUnit = (Unit) unit;
         }
         
         private void HighlightNeighborIfAvailable(Cell currentCell,
@@ -92,7 +99,7 @@ namespace Controllers
             {
                 availableCell.SetSelected(true);
             }
-            else if (availableCell.Pair.GetColor == Battlefield.GetOpponentColor(_currentPlayerColor))
+            else if (availableCell.Pair.GetColor == Battlefield.GetOpponentColor(_activePlayer.Color))
             {
                 var cellToMoveAfterEating = availableCell.Neighbours[neighborType];
                 if (cellToMoveAfterEating is not null && cellToMoveAfterEating.IsEmpty)
@@ -105,10 +112,8 @@ namespace Controllers
         private static void Unselect(Unit unit)
         {
             unit.SetSelected(false);
-                
+
             var cell = (Cell) unit.Pair;
-            cell.SetSelected(false);
-            
             foreach (var cellNeighbor in cell.Neighbours)
             {
                 cellNeighbor.Value?.SetSelected(false);
@@ -118,17 +123,16 @@ namespace Controllers
         private void EndUnitMove()
         {
             Unselect(_selectedUnit);
-            _selectedUnit = null;
             
-            _currentPlayerColor = Battlefield.GetOpponentColor(_currentPlayerColor);
-            _playerController.NextMove(_currentPlayerColor);
+            _selectedUnit = null;
+            _activePlayer = _playerController.NextTurn(Battlefield.GetOpponentColor(_activePlayer.Color));
         }
         
         private void CheckToEat(Unit unit, Unit unitToEat)
         {
             Debug.Log("Checking");
             // Если триггер не для фишки игрока или пересечение не с фишкой оппонента
-            if (unit.GetColor != _currentPlayerColor
+            if (unit.GetColor != _activePlayer.Color
                 || unit.GetColor == unitToEat.GetColor)
             {
                 return;
@@ -143,7 +147,6 @@ namespace Controllers
             }
 
             unitToEat.OnPointerClickEvent -= SelectUnit;
-            unitToEat.OnCrossAnotherUnitHandler -= CheckToEat;
             unitToEat.OnMoveEndCallback -= EndUnitMove;
             
             Destroy(unitToEat.gameObject);

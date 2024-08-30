@@ -15,3 +15,9 @@ public enum NeighbourType
     Bottom,
     BottomLeft
 }
+
+public enum UnitDirection
+{
+    Up,
+    Down
+}
