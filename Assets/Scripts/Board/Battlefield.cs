@@ -17,7 +17,8 @@ namespace Board
 
         public (List<Cell>, List<Unit>) Generate(Action<BaseElement> onCellClicked,
             Action<BaseElement> onUnitClicked,
-            Action onUnitMoveEnded)
+            Action onUnitMoveEnded,
+            CrossAnotherUnitHandler onCrossedAnother)
         {
             if (FindAnyObjectByType<Cell>() is not null)
             {
@@ -48,14 +49,14 @@ namespace Board
                     if (currentCellColor == playableCellColor && 0 <= row && row < startingUnitRows)
                     {
                         possibleNewUnit = CreateUnit(newCell, transform, ColorType.White, onUnitClicked,
-                            onUnitMoveEnded);
+                            onUnitMoveEnded, onCrossedAnother);
                     }
                     else
                         // если это конец доски и мы на играбельном цвете - черные шашки
                     if (currentCellColor == playableCellColor && row >= BOARD_SIZE - startingUnitRows)
                     {
                         possibleNewUnit = CreateUnit(newCell, transform, ColorType.Black, onUnitClicked,
-                            onUnitMoveEnded);
+                            onUnitMoveEnded, onCrossedAnother);
                     }
 
                     if (possibleNewUnit is not null)
@@ -93,7 +94,8 @@ namespace Board
 
         private Unit CreateUnit(Cell cell, Transform boardTransform, ColorType color,
             Action<BaseElement> onUnitClicked,
-            Action onUnitMoveEnded)
+            Action onUnitMoveEnded,
+            CrossAnotherUnitHandler onCrossedAnother)
         {
             var position = unitPrefab.CalculateUnitPosition(cell);
             
@@ -104,6 +106,7 @@ namespace Board
             
             newUnit.OnPointerClickEvent += onUnitClicked;
             newUnit.OnMoveEndCallback += onUnitMoveEnded;
+            newUnit.OnCrossAnotherUnit += onCrossedAnother;
 
             return newUnit;
         }

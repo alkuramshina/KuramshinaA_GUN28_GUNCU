@@ -17,13 +17,13 @@ namespace Controllers
         private PlayerController _playerController;
         
         private Unit _selectedUnit;
+        
         private Player _activePlayer;
-
         private bool _isMoving;
 
         private void Start()
         {
-            (_board, _units) = _battlefield.Generate(MoveToCell, SelectUnit, EndUnitMove);
+            (_board, _units) = _battlefield.Generate(MoveToCell, SelectUnit, EndUnitMove, CheckToEat);
             _activePlayer = _playerController.Start(ColorType.White);
         }
     
@@ -62,23 +62,29 @@ namespace Controllers
             _selectedUnit = (Unit) unit;
             
             unit.SetSelected(true);
-            HighlightPossibleMoves();
+            HighlightPossiblePaths();
         }
 
-        private void HighlightPossibleMoves()
+        private void HighlightPossiblePaths()
         {
             var currentCell = (Cell) _selectedUnit.Pair;
             
             if (_selectedUnit.Direction == UnitDirection.Up)
             {
-                HighlightAvailable(new List<Cell> { currentCell }, NeighbourType.TopRight);
-                HighlightAvailable(new List<Cell> { currentCell }, NeighbourType.TopLeft);
+                HighlightPath(currentCell, NeighbourType.TopRight);
+                HighlightPath(currentCell, NeighbourType.TopLeft);
             }
             else
             {
-                HighlightAvailable(new List<Cell> { currentCell }, NeighbourType.BottomLeft);
-                HighlightAvailable(new List<Cell> { currentCell }, NeighbourType.BottomRight);
+                HighlightPath(currentCell, NeighbourType.BottomLeft);
+                HighlightPath(currentCell, NeighbourType.BottomRight);
             }
+        }
+
+        private void HighlightPath(Cell currentCell, NeighbourType direction)
+        {
+            var path = new List<Cell> { currentCell };
+            HighlightAvailable(path, direction);
         }
 
         private void HighlightAvailable(List<Cell> path,
@@ -129,8 +135,6 @@ namespace Controllers
         
         private void CheckToEat(Unit unit, Unit unitToEat)
         {
-            Debug.Log("Checking");
-            // Если триггер не для фишки игрока или пересечение не с фишкой оппонента
             if (unit.GetColor != _activePlayer.Color
                 || unit.GetColor == unitToEat.GetColor)
             {
@@ -147,6 +151,7 @@ namespace Controllers
 
             unitToEat.OnPointerClickEvent -= SelectUnit;
             unitToEat.OnMoveEndCallback -= EndUnitMove;
+            unitToEat.OnCrossAnotherUnit -= CheckToEat;
             
             Destroy(unitToEat.gameObject);
         }

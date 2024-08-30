@@ -11,6 +11,7 @@ namespace Units
         [SerializeField] private MeshRenderer inDanger; 
         
         public event Action OnMoveEndCallback;
+        public event CrossAnotherUnitHandler OnCrossAnotherUnit;
 
         private const float MovingSpeed = 4f;
         public UnitDirection Direction { get; private set; }
@@ -93,9 +94,14 @@ namespace Units
                 onCell.transform.position.z);
         }
 
-        private void OnCollisionEnter()
+        private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Trigger");
+            if (other.TryGetComponent<Unit>(out var crossed))
+            {
+                OnCrossAnotherUnit?.Invoke(this, crossed);
+            }
         }
     }
+    
+    public delegate void CrossAnotherUnitHandler(Unit player, Unit crossed);
 }
