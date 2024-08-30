@@ -18,30 +18,37 @@ namespace Board
         {
             return _boardGenerator.Generate(onCellClicked, onUnitClicked, onUnitMoveEnded, onCrossedAnother);
         }
-        
+
         public void HighlightPossiblePaths(Unit selectedUnit)
         {
-            var currentCell = (Cell) selectedUnit.Pair;
-            
-            if (selectedUnit.Direction == UnitDirection.Up)
+            var currentCell = (Cell)selectedUnit.Pair;
+
+            if (selectedUnit.IsLeveledUp)
             {
-                HighlightPath(selectedUnit, currentCell, NeighbourType.TopRight);
-                HighlightPath(selectedUnit, currentCell, NeighbourType.TopLeft);
+                HighlightAvailableCells(selectedUnit, currentCell, NeighbourType.TopRight);
+                HighlightAvailableCells(selectedUnit, currentCell, NeighbourType.TopLeft);
+                HighlightAvailableCells(selectedUnit, currentCell, NeighbourType.BottomLeft);
+                HighlightAvailableCells(selectedUnit, currentCell, NeighbourType.BottomRight);
+            }
+            else if (selectedUnit.Direction == UnitDirection.Up)
+            {
+                HighlightAvailableCells(selectedUnit, currentCell, NeighbourType.TopRight);
+                HighlightAvailableOnlyForAttackCells(selectedUnit, currentCell, NeighbourType.BottomLeft);
+
+                HighlightAvailableCells(selectedUnit, currentCell, NeighbourType.TopLeft);
+                HighlightAvailableOnlyForAttackCells(selectedUnit, currentCell, NeighbourType.BottomRight);
             }
             else
             {
-                HighlightPath(selectedUnit, currentCell, NeighbourType.BottomLeft);
-                HighlightPath(selectedUnit, currentCell, NeighbourType.BottomRight);
+                HighlightAvailableCells(selectedUnit, currentCell, NeighbourType.BottomLeft);
+                HighlightAvailableOnlyForAttackCells(selectedUnit, currentCell, NeighbourType.TopRight);
+
+                HighlightAvailableCells(selectedUnit, currentCell, NeighbourType.BottomRight);
+                HighlightAvailableOnlyForAttackCells(selectedUnit, currentCell, NeighbourType.TopLeft);
             }
         }
 
-        private void HighlightPath(Unit selectedUnit, Cell currentCell, NeighbourType direction)
-        {
-            HighlightAvailable(selectedUnit, currentCell, direction);
-            HighlightAvailableOnlyForAttack(selectedUnit, currentCell, direction.GetOpposite());
-        }
-
-        private void HighlightAvailable(Unit selectedUnit, Cell currentCell,
+        private void HighlightAvailableCells(Unit selectedUnit, Cell currentCell,
             NeighbourType neighborType)
         {
             var availableCell = currentCell.Neighbours[neighborType];
@@ -53,6 +60,10 @@ namespace Board
             if (availableCell.IsEmpty)
             {
                 availableCell.SetSelected(true);
+                
+                if (selectedUnit.IsLeveledUp)
+                    HighlightAvailableCells(selectedUnit, availableCell, neighborType);
+                    
             }
             else if (availableCell.Pair.GetColor == selectedUnit.GetColor.GetOpponentColor())
             {
@@ -63,11 +74,11 @@ namespace Board
                 ((Unit)availableCell.Pair).SetInDanger(true);
                 cellToMoveAfterEating.SetSelected(true);
 
-                HighlightAvailable(selectedUnit, cellToMoveAfterEating, neighborType);
+                HighlightAvailableCells(selectedUnit, cellToMoveAfterEating, neighborType);
             }
         }
         
-        private void HighlightAvailableOnlyForAttack(Unit selectedUnit, Cell currentCell,
+        private void HighlightAvailableOnlyForAttackCells(Unit selectedUnit, Cell currentCell,
             NeighbourType neighborType)
         {
             var nextCell = currentCell.Neighbours[neighborType];
@@ -85,7 +96,7 @@ namespace Board
             ((Unit)nextCell.Pair).SetInDanger(true);
             cellToMoveAfterEating.SetSelected(true);
 
-            HighlightAvailableOnlyForAttack(selectedUnit, cellToMoveAfterEating, neighborType);
+            HighlightAvailableOnlyForAttackCells(selectedUnit, cellToMoveAfterEating, neighborType);
         }
         
         [Inject]
