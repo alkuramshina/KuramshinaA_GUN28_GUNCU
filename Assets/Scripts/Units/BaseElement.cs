@@ -44,15 +44,13 @@ namespace Units
             };
         }
 
-        public bool IsFocused { get; set; }
-        public bool IsSelected { get; set; }
+        public bool IsSelected { get; protected set; }
 
-        public abstract void SetFocused(bool focused);
+        protected abstract void SetFocused(bool focused);
         public abstract void SetSelected(bool selected);
         
         public void OnPointerEnter(PointerEventData eventData) => SetFocused(true);
         public void OnPointerExit(PointerEventData eventData) => SetFocused(false);
-
         public void OnPointerClick(PointerEventData eventData) => OnPointerClickEvent?.Invoke(this);
     }
 }

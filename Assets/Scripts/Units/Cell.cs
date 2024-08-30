@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using Units;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Board
 {
@@ -14,6 +14,9 @@ namespace Board
 
         public ColorType? IsVictoriousFor { get; private set; }
         public bool IsEmpty => Pair is null;
+
+        public bool IsNeighbour(Cell cell)
+            => Neighbours.Values.Contains(cell);
 
         private void Start()
         {
@@ -35,15 +38,16 @@ namespace Board
                     : null;
         }
 
-        public override void SetFocused(bool focused)
+        protected override void SetFocused(bool focused)
         {
             focus.enabled = focused;
         }
 
         public override void SetSelected(bool selected)
         {
+            SetFocused(false);
+            
             IsSelected = selected;
-            IsFocused = !selected;
             select.enabled = selected;
         }
     }

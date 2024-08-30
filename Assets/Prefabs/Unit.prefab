@@ -99,7 +99,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultMesh: {fileID: 530350514330905946}
   cellPaletteSettings: {fileID: 11400000, guid: 52a90c9510170c948b515684caacbc5e, type: 2}
-  CurrentCell: {fileID: 0}
 --- !u!65 &5242724142217426425
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using Board;
 using Settings;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Units
 {
@@ -36,9 +36,11 @@ namespace Units
             SetNewPair(nextCell);
             nextCell.SetNewPair(this);
         }
-        
-        public override void SetFocused(bool focused)
+
+        protected override void SetFocused(bool focused)
         {
+            if (IsSelected) return;
+            
             if (focused)
             {
                 defaultMesh.sharedMaterial = cellPaletteSettings.focused;
@@ -52,8 +54,7 @@ namespace Units
         public override void SetSelected(bool selected)
         {
             IsSelected = selected;
-            IsFocused = false;
-            
+
             if (selected)
             {
                 defaultMesh.sharedMaterial = cellPaletteSettings.selected;
@@ -69,6 +70,11 @@ namespace Units
             return new Vector3(onCell.transform.position.x, 
                 onCell.transform.position.y + onCell.transform.localScale.y / 2 + transform.localScale.y, 
                 onCell.transform.position.z);
+        }
+
+        private void OnCollisionEnter()
+        {
+            Debug.Log("Trigger");
         }
     }
     

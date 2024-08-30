@@ -17,7 +17,7 @@ namespace Board
 
         public (List<Cell>, List<Unit>) Generate(Action<BaseElement> onCellClicked,
             Action<BaseElement> onUnitClicked,
-            CrossAnotherUnitHandler onCheckToEat,
+            CrossAnotherUnitHandler onCrossAnotherUnit,
             Action onUnitMoveEnded)
         {
             if (FindAnyObjectByType<Cell>() is not null)
@@ -48,14 +48,14 @@ namespace Board
                     // если это начало доски и мы на играбельном цвете - белые шашки
                     if (currentCellColor == playableCellColor && 0 <= row && row < startingUnitRows)
                     {
-                        possibleNewUnit = CreateUnit(newCell, transform, ColorType.White, onUnitClicked, onCheckToEat,
+                        possibleNewUnit = CreateUnit(newCell, transform, ColorType.White, onUnitClicked, onCrossAnotherUnit,
                             onUnitMoveEnded);
                     }
                     else
                         // если это конец доски и мы на играбельном цвете - черные шашки
                     if (currentCellColor == playableCellColor && row >= BOARD_SIZE - startingUnitRows)
                     {
-                        possibleNewUnit = CreateUnit(newCell, transform, ColorType.Black, onUnitClicked, onCheckToEat,
+                        possibleNewUnit = CreateUnit(newCell, transform, ColorType.Black, onUnitClicked, onCrossAnotherUnit,
                             onUnitMoveEnded);
                     }
 
@@ -94,7 +94,7 @@ namespace Board
 
         private Unit CreateUnit(Cell cell, Transform boardTransform, ColorType color,
             Action<BaseElement> onUnitClicked,
-            CrossAnotherUnitHandler onCheckToEat,
+            CrossAnotherUnitHandler onCrossAnotherUnit,
             Action onUnitMoveEnded)
         {
             var position = unitPrefab.CalculateUnitPosition(cell);
@@ -105,7 +105,7 @@ namespace Board
             newUnit.SetNewPair(cell);
             
             newUnit.OnPointerClickEvent += onUnitClicked;
-            newUnit.OnCrossAnotherUnitHandler += onCheckToEat;
+            newUnit.OnCrossAnotherUnitHandler += onCrossAnotherUnit;
             newUnit.OnMoveEndCallback += onUnitMoveEnded;
 
             return newUnit;

@@ -43,7 +43,7 @@ namespace Controllers
             
             if (_selectedUnit is not null)
             {
-                RemoveHighlight(_selectedUnit);
+                Unselect(_selectedUnit);
             }
 
             unit.SetSelected(true);
@@ -90,7 +90,7 @@ namespace Controllers
             }
         }
 
-        private static void RemoveHighlight(Unit unit)
+        private static void Unselect(Unit unit)
         {
             unit.SetSelected(false);
                 
@@ -105,7 +105,7 @@ namespace Controllers
 
         private void EndMove()
         {
-            RemoveHighlight(_selectedUnit);
+            Unselect(_selectedUnit);
             _selectedUnit = null;
             
             _currentPlayerColor = Battlefield.GetOpponentColor(_currentPlayerColor);
@@ -119,6 +119,7 @@ namespace Controllers
         
         private void CheckToEat(Unit unit, Unit unitToEat)
         {
+            Debug.Log("Checking");
             // Если триггер не для фишки игрока или пересечение не с фишкой оппонента
             if (unit.GetColor != _currentPlayerColor
                 || unit.GetColor == unitToEat.GetColor)
