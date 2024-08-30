@@ -19,6 +19,8 @@ namespace Controllers
             _cameraMover.MoveToNextPov();
         }
 
+        public bool IsLocked => _cameraMover.CameraIsMoving;
+
         [Inject]
         private PlayerController(CameraMover cameraMover,
             RoundCounter roundCounter)

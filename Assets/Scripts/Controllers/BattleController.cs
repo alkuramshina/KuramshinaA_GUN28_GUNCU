@@ -18,25 +18,36 @@ namespace Controllers
         private ColorType _currentPlayerColor;
         private Unit _selectedUnit;
 
+        private bool IsMoving;
+
         private void Start()
         {
             (_board, _units) = _battlefield.Generate(MoveToCell, SelectUnit, CheckToEat, EndUnitMove);
+            
             _currentPlayerColor = ColorType.White;
             _playerController.FirstMove(_currentPlayerColor);
         }
     
         private void MoveToCell(BaseElement nextCell)
         {
-            if (!nextCell.IsSelected || _selectedUnit is null)
-            {
+            if (_playerController.IsLocked || IsMoving)
                 return;
-            }
+            
+            if (!nextCell.IsSelected || _selectedUnit is null)
+                return;
+
+            IsMoving = true;
 
             StartCoroutine(_selectedUnit.Move((Cell) nextCell));
+
+            IsMoving = false;
         }
         
         private void SelectUnit(BaseElement unit)
         {
+            if (_playerController.IsLocked || IsMoving)
+                return;
+            
             if (unit.GetColor != _currentPlayerColor)
             {
                 return;

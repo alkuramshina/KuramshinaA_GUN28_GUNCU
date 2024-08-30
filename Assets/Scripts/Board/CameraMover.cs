@@ -11,7 +11,7 @@ namespace Board
         private Camera _camera;
         private int _nextPosition;
 
-        private bool _cameraIsMoving;
+        public bool CameraIsMoving { get; private set; }
 
         private void Awake()
         {
@@ -30,7 +30,7 @@ namespace Board
         
         private IEnumerator CameraMovement()
         {
-            _cameraIsMoving = true;
+            CameraIsMoving = true;
 
             while (Vector3.Distance(_camera.transform.position, povs[_nextPosition].position) >= 0.01f)
             {
@@ -44,7 +44,7 @@ namespace Board
             }
 
             _nextPosition = CalculateNext(_nextPosition);
-            _cameraIsMoving = false;
+            CameraIsMoving = false;
         }
 
         private int CalculateNext(int current)
