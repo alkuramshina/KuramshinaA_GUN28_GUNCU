@@ -12,5 +12,7 @@ namespace Settings
         
         public Material whiteCell;
         public Material blackCell;
+        
+        public Material levelledUnit;
     }
 }

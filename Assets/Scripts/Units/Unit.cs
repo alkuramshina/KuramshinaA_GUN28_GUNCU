@@ -22,6 +22,8 @@ namespace Units
         private void LevelUp()
         {
             IsLeveledUp = true;
+            defaultMesh.sharedMaterial = cellPaletteSettings.levelledUnit;
+            
             ChangeDirection();
         }
         
