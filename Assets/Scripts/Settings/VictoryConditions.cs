@@ -17,12 +17,14 @@ namespace Settings
         {
             return direction switch
             {
-                UnitDirection.Up => !cell.Neighbours.ContainsKey(NeighbourType.Top) &&
-                                      !cell.Neighbours.ContainsKey(NeighbourType.TopLeft) &&
-                                      !cell.Neighbours.ContainsKey(NeighbourType.TopRight),
-                UnitDirection.Down => !cell.Neighbours.ContainsKey(NeighbourType.Bottom) &&
-                                        !cell.Neighbours.ContainsKey(NeighbourType.BottomLeft) &&
-                                        !cell.Neighbours.ContainsKey(NeighbourType.BottomRight),
+                UnitDirection.Up =>
+                    cell.Neighbours[NeighbourType.Top] is null
+                    && cell.Neighbours[NeighbourType.TopLeft] is null
+                    && cell.Neighbours[NeighbourType.TopRight] is null,
+                UnitDirection.Down =>
+                    cell.Neighbours[NeighbourType.Bottom] is null
+                    && cell.Neighbours[NeighbourType.Left] is null
+                    && cell.Neighbours[NeighbourType.BottomRight] is null,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

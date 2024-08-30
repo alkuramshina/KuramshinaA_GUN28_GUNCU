@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Board;
@@ -39,15 +38,8 @@ namespace Controllers
             Unselect(_selectedUnit);
 
             _isMoving = true;
-
-            var cell = (Cell)nextCell;
             
-            StartCoroutine(_selectedUnit.Move(cell));
-            
-            if (cell.AtTheEndOfBoardFor(_selectedUnit.Direction))
-            {
-                _selectedUnit.LevelUp();
-            }
+            StartCoroutine(_selectedUnit.Move((Cell)nextCell));
 
             _isMoving = false;
         }
@@ -79,17 +71,17 @@ namespace Controllers
             
             if (_selectedUnit.Direction == UnitDirection.Up)
             {
-                HighlightIfAvailable(new List<Cell> { currentCell }, NeighbourType.TopRight);
-                HighlightIfAvailable(new List<Cell> { currentCell }, NeighbourType.TopLeft);
+                HighlightAvailable(new List<Cell> { currentCell }, NeighbourType.TopRight);
+                HighlightAvailable(new List<Cell> { currentCell }, NeighbourType.TopLeft);
             }
             else
             {
-                HighlightIfAvailable(new List<Cell> { currentCell }, NeighbourType.BottomLeft);
-                HighlightIfAvailable(new List<Cell> { currentCell }, NeighbourType.BottomRight);
+                HighlightAvailable(new List<Cell> { currentCell }, NeighbourType.BottomLeft);
+                HighlightAvailable(new List<Cell> { currentCell }, NeighbourType.BottomRight);
             }
         }
 
-        private void HighlightIfAvailable(List<Cell> path,
+        private void HighlightAvailable(List<Cell> path,
             NeighbourType neighborType)
         {
             var currentCell = path.Last();
@@ -114,7 +106,7 @@ namespace Controllers
                 cellToMoveAfterEating.SetSelected(true);
                 path.Add(cellToMoveAfterEating);
 
-                HighlightIfAvailable(path, neighborType);
+                HighlightAvailable(path, neighborType);
             }
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Board;
+using Settings;
 using UnityEngine;
 
 namespace Units
@@ -14,7 +15,7 @@ namespace Units
         private const float MovingSpeed = 4f;
         public UnitDirection Direction { get; private set; }
 
-        public void LevelUp()
+        private void LevelUp()
         {
             Debug.Log("End of board! Level Up!");
             Direction = Direction == UnitDirection.Down 
@@ -30,9 +31,9 @@ namespace Units
                 : UnitDirection.Down;
         }
 
-        public IEnumerator Move(Cell nextCell)
+        public IEnumerator Move(Cell targetCell)
         {
-            var newPosition = CalculateUnitPosition(nextCell);
+            var newPosition = CalculateUnitPosition(targetCell);
             while (Vector3.Distance(transform.position, newPosition) >= 0.01f)
             {
                 transform.position = Vector3.Lerp(transform.position,
@@ -43,8 +44,13 @@ namespace Units
             
             OnMoveEndCallback?.Invoke();
             
-            SetNewPair(nextCell);
-            nextCell.SetNewPair(this);
+            SetNewPair(targetCell);
+            targetCell.SetNewPair(this);
+            
+            if (targetCell.AtTheEndOfBoardFor(Direction))
+            {
+                LevelUp();
+            }
         }
 
         protected override void SetFocused(bool focused)
